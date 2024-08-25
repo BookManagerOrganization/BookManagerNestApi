@@ -1,14 +1,14 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { HydratedDocument } from "mongoose";
 import {
     Prop,
     Schema,
     SchemaFactory
 } from "@nestjs/mongoose";
-import { ApiProperty } from "@nestjs/swagger";
 
 export type UserDocument = HydratedDocument<User>
 
-@Schema()
+@Schema({ collection: "User" })
 export class User {
     @ApiProperty({ type: String })
     _id: string;
@@ -36,6 +36,16 @@ export class User {
     @ApiProperty({ type: Date })
     @Prop()
     updatedAt: Date;
+
+    public constructor(user?: Partial<User>) {
+        this._id = user?._id;
+        this.username = user?.username;
+        this.email = user?.email;
+        this.password = user?.password;
+        this.admin = user?.admin;
+        this.createdAt = user?.createdAt;
+        this.updatedAt = user?.updatedAt;
+    }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
